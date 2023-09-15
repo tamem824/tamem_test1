@@ -22,7 +22,7 @@
                         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                             <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
 							<li class="nav-item"><a class="nav-link" href="#features">Articles</a></li>
-                            
+                            <li class="nav-item"><a class="nav-link" href="create_post.php">Create Article</a></li>
                             
                         </ul>
                     </div>
@@ -34,7 +34,7 @@
                         <div class="col-lg-8 col-xl-6">
                             <div class="text-center">
                                 <h2 class="fw-bolder">From our blog</h2>
-                                <p class="lead fw-normal text-muted mb-5">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eaque fugit ratione dicta mollitia. Officiis ad.</p>
+                                
                             </div>
                         </div>
                     </div>
@@ -48,22 +48,39 @@
 
 
    
-    
-        $sql = "SELECT * FROM category";
+        $ide=$_GET['id'];
+        $sql = "SELECT * FROM post  where category_id= $ide";
     $result = $conn->query($sql);
     // Display the list of posts
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-          echo '<div class="card">
-          <div class="card-header">
-            '.$row['cat_name'].'
-          </div>
-          <div class="card-body">
-            <h5 class="card-title">'.$row['about'].'</h5>
-            
-            <a href="filter.php?id='.$row['id'].'" class="btn btn-primary">Go</a>
-          </div>
-        </div>';
+          echo '<div class="col-lg-4 mb-5">
+                            <div class="card h-100 shadow border-0">
+                                <img class="card-img-top" src="image/'.$row['img'].'" alt="..." />
+                                <div class="card-body p-4">
+                                
+                                    <div class="badge bg-primary bg-gradient rounded-pill mb-2">News</div>
+                                    <a class="btn btn-primary" href="Show_article.php?id=' . $row['id'].'">
+                                 <h5 class="card-title mb-3">' .$row["name"] .'</h5></a>
+                                    <p class="card-text mb-0"> '.$row["description"] .'</p>
+                                    
+                                </div>
+                                <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                                    <div class="d-flex align-items-end justify-content-between">
+                                     <a  class="btn btn-primary" href="Update_post.php?id='.$row['id'].'">update</a>
+                                     <a href="delete_post.php?id='.$row['id'].'" class="btn btn-outline-danger">delete</a>
+                                        <div class="d-flex align-items-center">
+                                           
+                                            <div class="small">
+                                                <div class="fw-bold">'.$row['author'].'</div>
+                                                <div class="text-muted">'.$row['date'].' min read</div>
+                                                <img class="rounded-circle me-3" src="photo/BOOK.png" alt="..." />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>';
         }
         
     } else {
