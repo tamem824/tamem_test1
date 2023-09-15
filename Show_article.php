@@ -49,39 +49,35 @@
             <header class="py-5">
                 <div class="container px-5">
                     <div class="row justify-content-center">
-					 <?php
-   include 'connect.php';
-    // Create a database connection
-   
+                    <?php
+include 'connect.php';
+// Create a database connection
 
-    
-	 $post_id = $_GET['id'];
-    $sql = "SELECT * FROM post WHERE id = " . $post_id;
-    $result = $conn->query($sql);
+$post_id = $_GET['id'];
+$sql = "SELECT * FROM post, category WHERE post.id = " . $post_id;
+$result = $conn->query($sql);
 
-    // Display the post details
-    if ($result->num_rows > 0) {
-		$row = $result->fetch_assoc();
-                       echo '<div class="col-lg-8 col-xxl-6">
-                            <div class="text-center my-5">
-                                <h1 class="fw-bolder mb-3">'. $row['name'].'</h1>
-								<h4>'. $row['description'].'</h4>
-                                <img src="image/'.$row['img'].'" class="rounded float-start" width=300 heigth=150>
-                                <p class="lead fw-normal text-muted mb-4">
-                                   '.$row['body'].'
-                                </p>
-                                <p class="h4">'.$row['author'].'</p>
-                                </div>
-                                <p3>updated in '.$row['date'].'</p3>                                </div>
-                                </div>
-                                 
-
-
-                                <a class="btn btn-primary btn-lg" href="index.php">go to home</a>
-                            </div>
-                        </div>';
-	}
-						?>
+// Display the post details
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    echo '<div class="col-lg-8 col-xxl-6">
+            <div class="text-center my-5">
+                <h1 class="fw-bolder mb-3">'. $row['name'].'</h1>
+                <h4>'. $row['description'].'</h4>
+                <img src="image/'.$row['img'].'" class="rounded float-start" width="300" height="150">
+                <p class="lead fw-normal text-muted mb-4">
+                    '.$row['body'].'
+                </p>
+                <p class="h4">'.$row['author'].'</p>
+                <p>Updated on '.$row['date'].'</p>
+                <p>Category: '.$row['cat_name'].'</p>
+                <a class="btn btn-primary btn-lg" href="index.php">Go to home</a>
+            </div>
+        </div>';
+} else {
+    echo "No post found.";
+}
+?>
                     </div>
                 </div>
             </header>

@@ -70,12 +70,19 @@
         $name = $_POST['name'];
         $description = mysqli_real_escape_string($conn, $_POST['description']);
         $body = mysqli_real_escape_string($conn, $_POST['body']);
-         $author=$_POST['author'];
-         $date=$_POST['date'];
+        $author=$_POST['author'];
+        $date=$_POST['date'];
+        $category=$_POST['category'];
+        $cat_id_query = "SELECT id FROM category WHERE cat_name='$category'";
+        $cat_id_result = $conn->query($cat_id_query);
+        $cat_id_row = $cat_id_result->fetch_assoc();
+        $cat_id = $cat_id_row['id'];
+
+         
          
 
         // Insert the new post into the database
-        $sql = "INSERT INTO post (name, description,body,img,author,date) VALUES ('$name', '$description','$body','$picname','$author','$date')";
+        $sql = "INSERT INTO post (name, description,body,img,author,date,category_id) VALUES ('$name', '$description','$body','$picname','$author','$date','$cat_id')";
 
         if ($conn->query($sql) === TRUE) {
             echo "New post created successfully.";
@@ -88,68 +95,79 @@
         // Close the database connection
         $conn->close();
     }
-    ?>
-                               <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
-                                    <!-- Name input-->
-                                    <div class="form-floating mb-3">
-                                        <input class="form-control" name="name" id="name" type="text" placeholder="Enter your name..." data-sb-validations="required" />
-                                        <label for="name">art name</label>
-                                        <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
-                                    </div>
-                                    <!-- Email address input-->
-                                    <div class="form-floating mb-3">
-                                        <input class="form-control" name="description" id="description" type="text" placeholder="any thing to make them read" data-sb-validations="required" />
-                                        <label for="text">description</label>
-                                        <div class="invalid-feedback" data-sb-feedback="text:required">A description is required.</div>
-                                        
-                                    </div>
-                                    
-                                    </div>
-                                    <!-- Message input-->
-                                    <div class="form-floating mb-3">
-                                        <textarea class="form-control" name="body" id="the articles" type="text" placeholder="Enter your artical here..." style="height: 10rem" data-sb-validations="required"></textarea>
-                                        <label for="artical">artical</label>
-                                        <div class="invalid-feedback" data-sb-feedback="message:required">An artical is required.</div>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input class="form-control" name="author" id="author" type="text" placeholder="author" data-sb-validations="required" />
-                                        <label for="text">author</label>
-                                        <div class="invalid-feedback" data-sb-feedback="text:required">An author is required.</div>
-                                        
-                                    </div>
-                                    <input class="form-control" name="date" id="date" type="date" placeholder="date"  />
-                                        <label for="text">author</label>
-                                        
-
-                                    
-                                    <div class="form-floating mb-3">
-                                        <input class="form-control" name="img" id="img" type="file" placeholder="add photo" />
-                                        
-                                    <!-- Submit success message-->
-                                    <!---->
-                                    <!-- This is what your users will see when the form-->
-                                    <!-- has successfully submitted-->
-                                    <div class="d-none" id="submitSuccessMessage">
-                                        <div class="text-center mb-3">
-                                            <div class="fw-bolder"> <a href="insert_art.php">wait a second </a></div>
-                                            To activate this form, sign up at
-                                            <br />
-                                           
-                                        </div>
-                                    </div>
-                                    <!-- Submit error message-->
-                                    <!---->
-                                    <!-- This is what your users will see when there is-->
-                                    <!-- an error submitting the form-->
-                                    <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
-                                    <!-- Submit Button-->
-                                    <div class="d-grid"><button class="btn btn-primary btn-lg enbled" name="submitButton" type="submit" >go</button></div>
-                                    
-                                    
-                                </form>
-                            </div>
-                        </div>
+                    ?>
+                <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
+                    <!-- Name input -->
+                    <div class="form-floating mb-3">
+                    <input class="form-control" name="name" id="name" type="text" placeholder="Enter your name..." data-sb-validations="required" />
+                    <label for="name">Art Name</label>
+                    <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
                     </div>
+                    <!-- Description input -->
+                    <div class="form-floating mb-3">
+                    <input class="form-control" name="description" id="description" type="text" placeholder="Anything to make them read" data-sb-validations="required" />
+                    <label for="description">Description</label>
+                    <div class="invalid-feedback" data-sb-feedback="description:required">A description is required.</div>
+                    </div>
+                    <!-- Article input -->
+                    <div class="form-floating mb-3">
+                    <textarea class="form-control" name="body" id="the_articles" placeholder="Enter your article here..." style="height: 10rem" data-sb-validations="required"></textarea>
+                    <label for="the_articles">Article</label>
+                    <div class="invalid-feedback" data-sb-feedback="body:required">An article is required.</div>
+                    </div>
+                    <!-- Author input -->
+                    <div class="form-floating mb-3">
+                    <input class="form-control" name="author" id="author" type="text" placeholder="Author" data-sb-validations="required" />
+                    <label for="author">Author</label>
+                    <div class="invalid-feedback" data-sb-feedback="author:required">An author is required.</div>
+                    </div>
+                    <!-- Category select -->
+                    <div class="form-floating mb-3">
+                    <select class="form-select" aria-label="Default select example" name="category">
+                    <?php
+                    include 'connect.php';
+                    $sql = "SELECT * FROM category";
+                    $result = $conn->query($sql);
+
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row['cat_name'] . '">' . $row['cat_name'] . '</option>';
+                        }
+                    }
+                    ?>
+                    </select>
+                    <label for="category">Category</label>
+                    </div>
+                    <!-- Date input -->
+                    <div class="form-floating mb-3">
+                    <input class="form-control" name="date" id="date" type="date" placeholder="Date" />
+                    <label for="date">Date</label>
+                    </div>
+                    <!-- Image input -->
+                    <div class="form-floating mb-3">
+                    <input class="form-control" name="img" id="img" type="file" placeholder="Add photo" />
+                    <label for="img">Image</label>
+                    </div>
+                    <!-- Submit success message -->
+                    <div class="d-none" id="submitSuccessMessage">
+                    <div class="text-center mb-3">
+                    <div class="fw-bolder">Wait a second</div>
+                    To activate this form, sign up at
+                    <br />
+                    </div>
+                    </div>
+                    <!-- Submit error message -->
+                    <div class="d-none" id="submitErrorMessage">
+                    <div class="text-center text-danger mb-3">Error sending message!</div>
+                    </div>
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                    <button class="btn btn-primary btn-lg" name="submitButton" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
                    
-    </body>
+</body>
 </html>
