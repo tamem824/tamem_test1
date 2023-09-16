@@ -23,7 +23,7 @@
                             <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
 							<li class="nav-item"><a class="nav-link" href="#features">Articles</a></li>
                             <li class="nav-item"><a class="nav-link" href="create_post.php">Create Article</a></li>
-                            
+                            <li class="nav-item"><a class="nav-link" href="insert_catgory.php">Create category</a></li>
                         </ul>
                     </div>
                 </div>

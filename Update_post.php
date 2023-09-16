@@ -62,7 +62,7 @@
                                 <?php 
                                 include 'connect.php';
                                 $post_id=$_GET['id'];
-                                $sql="SELECT * from post WHERE id='$post_id' ";
+                                $sql="SELECT * from post,category WHERE post.id='$post_id' ";
                                 $result = $conn->query($sql);
                                $row=($result->fetch_assoc());
                                 echo '<form id="updateForm" action="#" method="POST" enctype="multipart/form-data">>
@@ -84,7 +84,22 @@
                                         <div class="invalid-feedback" data-sb-feedback="required">An author is required.</div>
                                         
                                     </div>
-                                    
+                                    <div class="form-floating mb-3">
+                    <select class="form-select" aria-label="Default select example" name="category">
+                    
+                    
+                    '.$sql = "SELECT * FROM category";
+                    $result = $conn->query($sql);
+
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row['cat_name'] . '">' . $row['cat_name'] . '</option>';
+                        }
+                    }'
+                    
+                    </select>
+                    <label for="category">Category</label>
+                    </div>
                                     </div>
                                     <!-- Message input-->
                                     <div class="form-floating mb-3">
