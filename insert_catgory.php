@@ -74,35 +74,33 @@ if ($conn->query($sql) === TRUE) {
 
 $conn->close();}
 ?> 
-<form method="post" action="<?php echo htmlspecialchars($_SERVER("PHP_SELF")); ?> " enctype="multipart/form-data">
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?> " >
 
-               <div class="form-floating mb-3">
-                    <input class="form-control" name="category_name" id="category_name" type="text"  data-sb-validations="required" />
-                    <label for="category_name">category Name</label>
-                    <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
-
-                </div>
-                <div class="form-floating mb-3">
-                    <input class="form-control" name="about" id="about" type="text" data-sb-validations="required" />
-                    <label for="about">About</label>
-                    <div class="invalid-feedback" data-sb-feedback="about:required">About is required.</div>
-                </div>
-                                    <!-- Submit success message -->
-                                    <div class="d-none" id="submitSuccessMessage">
-                    <div class="text-center mb-3">
-                    <div class="fw-bolder">Wait a second</div>
-                    
-                    <br />
-                    </div>
-                    </div>
-                    <!-- Submit error message -->
-                    <div class="d-none" id="submitErrorMessage">
-                    <div class="text-center text-danger mb-3">Error sending message!</div>
-                    </div>
-                    <!-- Submit Button -->
-                    <div class="d-grid">
-                    <button class="btn btn-primary btn-lg" name="submitButton" type="submit">Save</button>
-                    </div>
+            <div class="form-floating mb-3">
+    <input class="form-control" name="category_name" id="category_name" type="text" data-sb-validations="required" />
+    <label for="category_name">Category Name</label>
+    <div class="invalid-feedback" data-sb-feedback="category_name:required">A name is required.</div>
+</div>
+<div class="form-floating mb-3">
+    <input class="form-control" name="about" id="about" type="text" data-sb-validations="required" />
+    <label for="about">About</label>
+    <div class="invalid-feedback" data-sb-feedback="about:required">About is required.</div>
+</div>
+<!-- Submit success message -->
+<div class="d-none" id="submitSuccessMessage">
+    <div class="text-center mb-3">
+        <div class="fw-bolder">Wait a second</div>
+        <br />
+    </div>
+</div>
+<!-- Submit error message -->
+<div class="d-none" id="submitErrorMessage">
+    <div class="text-center text-danger mb-3">Error sending message!</div>
+</div>
+<!-- Submit Button -->
+<div class="d-grid">
+    <button class="btn btn-primary btn-lg" name="submitButton" type="submit">Save</button>
+</div>
                 
 
 
