@@ -60,9 +60,9 @@
 <?php
 require 'connect.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-$category_name=$_POST['category_name'];
-$category_about=$_POST['about'];
-$sql="INSERT into category(cat_name,about) VALUE ($category_name,$category_about)";
+    $category_name = mysqli_real_escape_string($conn, $_POST['category_name']);
+    $category_about = mysqli_real_escape_string($conn, $_POST['about']);
+    $sql = "INSERT INTO category (cat_name, about) VALUES ('$category_name', '$category_about')";
 
 if ($conn->query($sql) === TRUE) {
     echo "New record created successfully";
