@@ -12,6 +12,18 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+        <script>
+        function displayTime() {
+            var currentDate = new Date();
+            var currentHour = currentDate.getHours();
+            var currentMinute = currentDate.getMinutes();
+            var currentSecond = currentDate.getSeconds();
+            var clock = document.getElementById('clock');
+            clock.textContent = currentHour + ':' + currentMinute + ':' + currentSecond;
+        }
+
+        setInterval(displayTime, 1000); // تحديث الساعة كل ثانية
+    </script>
     </head>
     <body class="d-flex flex-column" style="--bs-body-color: #333;">
         <main class="flex-shrink-0">
@@ -19,6 +31,7 @@
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div class="container px-5">
                     <a class="navbar-brand" href="index.html">Show article</a>
+                    
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -47,6 +60,7 @@
             </nav>
             <!-- Header-->
             <header class="py-5">
+            
                 <div class="container px-5">
                     <div class="row justify-content-center">
                     <?php
@@ -72,8 +86,10 @@ if ($result->num_rows > 0) {
                 <p>Updated on '.$row['date'].'</p>
                 <p>Category: '.$row['cat_name'].'</p>
                 <a class="btn btn-primary btn-lg" href="index.php">Go to home</a>
+                <button type="button" class="btn-close" aria-label="Close"></button>
             </div>
         </div>';
+        
 } else {
     echo "No post found.";
 }
@@ -81,6 +97,6 @@ if ($result->num_rows > 0) {
                     </div>
                 </div>
             </header>
-         
+    <p id="clock"></a></p>         
     </body>
 </html>

@@ -18,11 +18,16 @@
             <!-- Navigation-->
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div class="container px-5">
+                    
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                            
                             <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
 							<li class="nav-item"><a class="nav-link" href="#features">Articles</a></li>
+                            <li class="nav-item"><a class="nav-link" href="register.php">sign_up</a></li>
+
                             <li class="nav-item"><a class="nav-link" href="create_post.php">Create Article</a></li>
+                           
                             
                         </ul>
                     </div>
@@ -62,6 +67,7 @@
             <h5 class="card-title">'.$row['about'].'</h5>
             
             <a href="filter.php?id='.$row['id'].'" class="btn btn-primary">Go</a>
+            <a href="delete_category.php?id='.$row['id'].'" class="btn btn-outline-danger">delete</a>
           </div>
         </div>';
         }
