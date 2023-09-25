@@ -130,16 +130,19 @@ if ($result->num_rows > 0) {
 
 $conn->close();
 ?>
-  <div>
-    <a href="delete_category.php?id=<?php
-    $del = "SELECT * FROM post";
-    $result = $conn->query($del);
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo $row['category_id'];
-        }
+ <?php
+ require 'connect.php';
+$del = "SELECT * FROM category where id=".$_GET['id'];
+$result = $conn->query($del);
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        echo '<div>
+                <a href="delete_category.php?id=' . $row['id'] . '" class="btn btn-outline-danger" onclick="confirmDelete(event)">Delete</a>
+              </div>';
     }
-    ?>" class="btn btn-outline-danger" onclick="confirmDelete(event)">Delete category</a>
+}
+?>
 </div>
     </section>
         </main>

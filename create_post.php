@@ -95,9 +95,13 @@
         $sql = "INSERT INTO post (name, description,body,img,author,date,category_id) VALUES ('$name', '$description','$body','$picname','$author','$date','$cat_id')";
 
         if ($conn->query($sql) === TRUE) {
-            echo "New post created successfully.";
+            echo '<script>
+           
+            window.location.href = "index.php";
+        
             
-            move_uploaded_file($pictmp,"image/$picname");
+            </script>
+            move_uploaded_file($pictmp,"image/$picname")';
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
