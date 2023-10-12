@@ -73,24 +73,22 @@
                             <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
   <!-- Name input -->
   <div class="form-floating mb-3">
-    <input class="form-control" id="name" type="text" placeholder="Enter your name..." data-sb-validations="required" />
+    <input class="form-control" name="username" id="username" type="text" placeholder="Enter your name..." data-sb-validations="required" />
     <label for="name">Username</label>
-    <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
+    <div class="invalid-feedback" data-s name="username"b-feedback="name:required">A name is required.</div>
   </div>
   <!-- Email address input -->
   <div class="form-floating mb-3">
-    <input class="form-control" id="email" type="email" placeholder="example.com" data-sb-validations="email:required" />
+    <input class="form-control" id="email" name="email" type="email" placeholder="example.com" data-sb-validations="email:required" />
     <label for="email">Email</label>
     <div class="invalid-feedback" data-sb-feedback="email:required">An email is required.</div>
   </div>
   <!-- Password input -->
-  <div class="form-floating mb-3">
-    <input class="form-control" id="password" type="password" data-sb-validations="required" name="password"
+  <div class="form-floating mb-3"><input class="form-control" id="password" type="password" data-sb-validations="required" name="password"
       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" required
       placeholder="Invalid password. It must contain an uppercase letter, a lowercase letter, a number, a special character, and be at least 8 characters long." />
-    <div class="invalid-feedback" data-sb-feedback="required">Invalid password. It must contain an uppercase letter, a lowercase letter, a number, a special character, and be at least 8 characters long.</div>
-  </div>
   <!-- Submit success message -->
+              </div>
   <div class="d-none" id="submitSuccessMessage">
     <div class="text-center mb-3">
       <div class="fw-bolder"><a href="insert_art.php">Wait a second</a></div>
@@ -112,3 +110,22 @@
                     </div>
                 </body>
 </html>
+<?php 
+require 'connect.php';
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+$username=$_POST['username'];
+$email=$_POST['email'];
+$password=$_POST['password'];
+$insert = "INSERT INTO register (username, email, password) VALUES ('$username', '$email', '$password')";
+if($conn->query($insert)==true){
+  echo '<script>
+           
+  window.location.href = "index.php";
+
+  
+  </script> 
+  welcome to our page ';
+}
+else {
+  echo  "Error: " . $insert . "<br>" . $conn->error;
+}}

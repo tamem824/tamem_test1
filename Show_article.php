@@ -75,28 +75,36 @@ include 'connect.php';
 
 $post_id = $_GET['id'];
 $sql = "SELECT * FROM post, category WHERE post.id = " . $post_id;
-$result = $conn->query($sql);
+$tagsQuery = "SELECT t.tag_name FROM tags t JOIN tags_posts tp ON t.id = tp.tagid WHERE tp.postid = " . $post_id;
 
+$result = $conn->query($sql);
+$result2=$conn->query($tagsQuery);
 // Display the post details
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
     echo '<div class="col-lg-8 col-xxl-6">
-            <div class="text-center my-5">
-                <h1 class="fw-bolder mb-3">'. $row['name'].'</h1>
-                <h4>'. $row['description'].'</h4>
-                <img src="image/'.$row['img'].'" class="rounded float-start" width="300" height="150">
-                <p class="lead fw-normal text-muted mb-4">
-                    '.$row['body'].'
-                </p>
-                <p class="h4">'.$row['author'].'</p>
-                <p>Updated on '.$row['date'].'</p>
-                <p>Category: '.$row['cat_name'].'</p>
-                <a class="btn btn-primary btn-lg" href="index.php">Go to home</a>
-                <button type="button" class="btn-close" aria-label="Close"></button>
-            </div>
-        </div>';
+    <div class="text-center my-5">
+        <h1 class="fw-bolder mb-3">'. $row['name'].'</h1>
+        <h4>'. $row['description'].'</h4>
+        <img src="image/'.$row['img'].'" class="rounded float-start" width="300" height="150">
+        <p class="lead fw-normal text-muted mb-4">
+            '.$row['body'].'
+        </p>
+        <p class="h4">'.$row['author'].'</p>
+        <p>Updated on '.$row['date'].'</p>
+        <p>Category: '.$row['cat_name'].'</p>
+        <a class="btn btn-primary btn-lg" href="index.php">-||-</a>
         
-} else {
+        <button type="button" class="btn-close" aria-label="Close"></button>
+    </div>
+</div>';
+if($result2->num_rows>0){    
+while($row2=$result2->fetch_assoc()){
+   echo '
+   <p> tag:  '.$row2['tag_name'].' </p>
+   ';
+        
+} }}else {
     echo "No post found.";
 }
 ?>

@@ -67,49 +67,77 @@
                         </div>
                     </div>
                     <div class="row gx-5">
-                            <?php
-                             require 'connect.php';
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        
-        
+                    <?php
+require 'connect.php';
 
-        // Get the post data from the form
-        $pic=$_FILES["img"];
-        $picname=$pic["name"];
-        $pictmp=$pic["tmp_name"];
-        $name = $_POST['name'];
-        $description = mysqli_real_escape_string($conn, $_POST['description']);
-        $body = mysqli_real_escape_string($conn, $_POST['body']);
-        $author=$_POST['author'];
-        $date=$_POST['date'];
-        $category=$_POST['category'];
-        $cat_id_query = "SELECT id FROM category WHERE cat_name='$category'";
-        $cat_id_result = $conn->query($cat_id_query);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $postId = $_POST['id'];
+    $pic = $_FILES["img"];
+    $picname = $pic["name"];
+    $pictmp = $pic["tmp_name"];
+    $name = $_POST['name'];
+    $description = mysqli_real_escape_string($conn, $_POST['description']);
+    $body = mysqli_real_escape_string($conn, $_POST['body']);
+    $author = $_POST['author'];
+    $date = $_POST['date'];
+    $category = $_POST['category'];
+    
+    $cat_id_query = "SELECT id FROM category WHERE cat_name='$category'";
+    $cat_id_result = $conn->query($cat_id_query);
+    
+    if ($cat_id_result->num_rows > 0) {
         $cat_id_row = $cat_id_result->fetch_assoc();
         $cat_id = $cat_id_row['id'];
-
-         
-         
-
-        // Insert the new post into the database
-        $sql = "INSERT INTO post (name, description,body,img,author,date,category_id) VALUES ('$name', '$description','$body','$picname','$author','$date','$cat_id')";
-
-        if ($conn->query($sql) === TRUE) {
-            echo '<script>
-           
-            window.location.href = "index.php";
         
+        // Insert the new post into the database
+        $sql = "INSERT INTO post (name, description, body, img, author, date, category_id) VALUES ('$name', '$description', '$body', '$picname', '$author', '$date', '$cat_id')";
+        
+        if ($conn->query($sql) === TRUE) {
+            // Get the last inserted post ID
+            $lastInsertId = $conn->insert_id;
             
-            </script>
-            move_uploaded_file($pictmp,"image/$picname")';
+            // Insert the tags into the tags_posts table
+            if (isset($_POST['tags'])) {
+                $selectedTags = $_POST['tags'];
+            
+                foreach ($selectedTags as $tagName) {
+                    $tagIdQuery = "SELECT id FROM tags WHERE tag_name='$tagName'";
+                    $tagIdResult = $conn->query($tagIdQuery);
+            
+                    if ($tagIdResult->num_rows > 0) {
+                        $tagIdRow = $tagIdResult->fetch_assoc();
+                        $tagId = $tagIdRow['id'];
+            
+                        $sql = "INSERT INTO tags_posts (postid, tagid) VALUES ('$lastInsertId', '$tagId')";
+            
+                        if ($conn->query($sql) !== TRUE) {
+                            echo "An error occurred while adding the relationship: " . $conn->error;
+                        }
+                    } else {
+                        echo "Tag ID not found for tag: $tagName.";
+                    }
+                }
+            }           
+            
+            // Move the uploaded image
+            if (move_uploaded_file($pictmp, "image/$picname")) {
+                echo '<script>
+                    window.location.href = "index.php";
+                </script>';
+            } else {
+                echo "An error occurred while uploading the image.";
+            }
         } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+            echo "An error occurred while adding the post: " . $conn->error;
         }
-
-        // Close the database connection
-        $conn->close();
+    } else {
+        echo "Category ID not found.";
     }
-                    ?>
+
+    // Close the database connection
+    $conn->close();
+}
+?>
                 <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
                     <!-- Name input -->
                     <div class="form-floating mb-3">
@@ -117,6 +145,8 @@
                     <label for="name">Art Name</label>
                     <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
                     </div>
+                    <!-- id hidden -->
+                    <input class="form-control" name="id" id="id" type="hidden">
                     <!-- Description input -->
                     <div class="form-floating mb-3">
                     <input class="form-control" name="description" id="description" type="text" placeholder="Anything to make them read" data-sb-validations="required" />
@@ -137,7 +167,9 @@
                     </div>
                     <!-- Category select -->
                     <div class="form-floating mb-3">
-                    <select class="form-select" aria-label="Default select example" name="category">
+                    <select class="form-select" aria-label="Default select example" name="category" require>
+                        <option selected>Select Category</option>
+
                     <?php
                     include 'connect.php';
                     $sql = "SELECT * FROM category";
@@ -157,6 +189,41 @@
                     <input class="form-control" name="date" id="date" type="date" placeholder="Date" />
                     <label for="date">Date</label>
                     </div>
+                    <div class="form-floating mb-3">
+                    <select class="form-select" aria-label="Default select example" name="tags[]" multiple required>
+    <option selected>Select tags</option>
+
+    <?php
+    include 'connect.php';
+    $sql = "SELECT * FROM tags";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo '<option value="' . $row['tag_name'] . '">' . $row['tag_name'] . '</option>';
+        }
+    }
+    ?>
+</select>
+<label for="tags">Tags</label>
+<style>
+    select.form-select {
+        background-color: #f2f2f2;
+        color: #333;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+    }
+
+    select.form-select option[selected] {
+        background-color: #ddd;
+        color: #555;
+    }
+</style>
                     <!-- Image input -->
                     <div class="form-floating mb-3">
                     <input class="form-control" name="img" id="img" type="file" placeholder="Add photo" />

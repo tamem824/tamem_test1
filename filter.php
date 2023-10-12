@@ -45,7 +45,7 @@
                             <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdownBlog" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">register</a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownBlog">
-                            <li><a class="dropdown-item" href="create_.php">sign_up</a></li>
+                            <li><a class="dropdown-item" href="register.php">sign_up</a></li>
                             <li><a class="dropdown-item" href="register.php">log-in</a></li>
                             </ul>
                             <li class="nav-item dropdown">
@@ -80,12 +80,13 @@
                     </div>
                     <div class="row gx-5">
                     <?php
-include 'connect.php'; // قم بإنشاء اتصال بقاعدة البيانات
+include 'connect.php'; 
 $ide = $_GET['id'];
 $sql = "SELECT * FROM post WHERE category_id = $ide";
 $result = $conn->query($sql);
 
-// عرض قائمة المشاركات
+
+
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         echo '<div class="col-lg-4 mb-5">
@@ -101,16 +102,26 @@ if ($result->num_rows > 0) {
                 <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
                     <div class="d-flex align-items-end justify-content-between">
                         <a class="btn btn-primary" href="Update_post.php?id=' . $row['id'] . '">Update</a>
-                        <a href="#?id=' . $row['id'] . '" class="btn btn-outline-danger" onclick="confirmDelete(event)">Delete</a>
-                    </div>
-                </div>
-            </div>
-        </div>';
+                        
+                        <div>
+    <a href="delete_post.php?id=' . $row['id'] . '" class="btn btn-outline-danger" onclick="return confirmDelete(event)">Delete</a>
+    
+</div>
+<script>-
+    function confirmDelete(event) {
+        event.preventDefault();
 
-       
-        
+        var result = confirm("ARE YOUU SURE?");
 
-         '<div class="d-flex align-items-center">
+        if (result) {
+            window.location.href = event.target.href;
+        } else {
+            
+        }
+    }
+</script>
+
+         <div class="d-flex align-items-center">
             <div class="small">
                 <div class="fw-bold">'.$row['author'].'</div>
                 <div class="text-muted">'.$row['date'].' min read</div>
@@ -121,29 +132,42 @@ if ($result->num_rows > 0) {
   
 </div>
 </div>
+</div>
+</div>
+</div>
+</div>
 </div>';
+       
+        
+
     }
 } else {
     echo "No posts found.";
 }
+$tagsQuery = "SELECT t.tag_name FROM tags_posts tp JOIN tags t ON tp.tagid = t.id WHERE tp.postid = '$ide'";
+$resultTags = $conn->query($tagsQuery);
+
+if ($resultTags->num_rows > 0) {
+    while ($tag = $resultTags->fetch_assoc()) {
+        echo '<h5 class="card-title mb-3">' . $tag["tag_name"] . '</h5>';
+    }
+}
 
 
-$conn->close();
-?>
- <?php
- require 'connect.php';
-$del = "SELECT * FROM category where id=".$_GET['id'];
+
+$del = "SELECT * FROM category WHERE id=" . $_GET['id'];
 $result = $conn->query($del);
 
 if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        echo '<div>
-                <a href="delete_category.php?id=' . $row['id'] . '" class="btn btn-outline-danger" onclick="confirmDelete(event)">Delete</a>
-              </div>';
+    while ($rows = $result->fetch_assoc()) {
+        echo '<li><a href="delete_category.php?id=' . $rows['id'] . '" class="btn btn-outline-danger" onclick="return confirmDelete(event)">Delete</a></li>';
     }
 }
+
+$conn->close();
 ?>
 </div>
+
     </section>
         </main>
         <!-- Footer-->
